@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Book page</title>
+</head>
+<body>
+<p th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">Value</p>
+
+<form th:method="PATCH" th:action="@{/books/{id}/rent(id=${book.getId()})}" th:unless="${book.isRented()}">
+    <p>Currently this book has no renter</p>
+    <label for="person">Choose a renter: </label>
+    <select th:object="${person}" th:field="*{id}" id="person">
+        <option th:each="p : ${people}" th:value="${p.getId()}" th:text="${p.getName()}"></option>
+    </select>
+    <input type="submit" value="Make a renter"/>
+</form>
+
+<form th:method="PATCH" th:action="@{/books/{id}/unrent(id=${book.getId()})}" th:if="${book.isRented()}">
+    Currently this book has a renter:
+    <a th:href="@{/people/{id}(id=${renter.getId()})}" th:text="${renter.getName()}"></a>
+    <br/>
+    <input type="submit" value="Unrent from user"/>
+</form>
+
+<br/>
+<hr/>
+<form th:method="GET" th:action="@{/books/{id}/edit(id=${book.getId()})}">
+    <input type="submit" value="Edit"/>
+</form>
+<form th:method="DELETE" th:action="@{/books/{id}(id=${book.getId()})}">
+    <input type="submit" value="Delete"/>
+</form>
+</body>
+</html>
